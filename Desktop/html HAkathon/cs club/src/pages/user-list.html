@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Accounts</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100">
+    <div class="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
+      <div class="flex items-center justify-between pb-6">
+        <div>
+          <h2 class="font-semibold text-gray-700">User Accounts</h2>
+          <span class="text-xs text-gray-500"
+            >View accounts of registered users</span
+          >
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="ml-10 space-x-8 lg:ml-40">
+            <button
+              class="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-4 w-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75"
+                />
+              </svg>
+              CSV
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="overflow-y-hidden rounded-lg border">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr
+                class="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white"
+              >
+                <th class="px-5 py-3">ID</th>
+                <th class="px-5 py-3">Full Name</th>
+                <th class="px-5 py-3">User Role</th>
+                <th class="px-5 py-3">Created at</th>
+                <th class="px-5 py-3">Status</th>
+                <th class="px-5 py-3">Action</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody" class="text-gray-500">
+              <!-- Dynamic User Data Will Be Rendered Here -->
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="flex flex-col items-center border-t bg-white px-5 py-5 sm:flex-row sm:justify-between"
+        >
+          <span class="text-xs text-gray-600 sm:text-sm">
+            Showing 1 to 5 of 12 Entries
+          </span>
+          <div class="mt-2 inline-flex sm:mt-0">
+            <button
+              class="mr-2 h-12 w-12 rounded-full border text-sm font-semibold text-gray-600 transition duration-150 hover:bg-gray-100"
+            >
+              Prev
+            </button>
+            <button
+              class="h-12 w-12 rounded-full border text-sm font-semibold text-gray-600 transition duration-150 hover:bg-gray-100"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        updateDoc,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+      import { auth } from "../config/firebase-config.js";
+
+      const db = getFirestore();
+
+      async function fetchUsers() {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersTableBody = document.getElementById("usersTableBody");
+        usersTableBody.innerHTML = ""; // Clear existing data
+
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          const userRow = `
+                      <tr>
+                          <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <p class="whitespace-no-wrap">${doc.id}</p>
+                          </td>
+                          <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <div class="flex items-center">
+                                  <div class="ml-3">
+                                      <p class="whitespace-no-wrap">${
+                                        userData.email
+                                      }</p>
+                                  </div>
+                              </div>
+                          </td>
+                          <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <p class="whitespace-no-wrap">${userData.role}</p>
+                          </td>
+                          <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <p class="whitespace-no-wrap">${new Date(
+                                userData.createdAt.seconds * 1000
+                              ).toLocaleDateString()}</p>
+                          </td>
+                          <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <span class="rounded-full ${
+                                userData.status === "active"
+                                  ? "bg-green-200"
+                                  : "bg-yellow-200"
+                              } px-3 py-1 text-xs font-semibold ${
+            userData.status === "active" ? "text-green-900" : "text-yellow-900"
+          }">
+                                  ${
+                                    userData.status.charAt(0).toUpperCase() +
+                                    userData.status.slice(1)
+                                  }
+                              </span>
+                          </td>
+                          <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <select onchange="updateUser('${
+                                doc.id
+                              }', this.value)" class="rounded-md border border-gray-300 px-3 py-1">
+                                  <option value="" disabled selected>Action</option>
+                                  <option value="suspend">Suspend</option>
+                                  <option value="block">Block</option>
+                                  <option value="active">Set as Active user</option>
+                                  <option value="promoteAdmin">Promote to Admin</option>
+                                  <option value="promoteMember">Promote to Member</option>
+                                  <option value="depromoteUser">Depromote to User</option>
+                              </select>
+                          </td>
+                      </tr>
+                  `;
+          usersTableBody.innerHTML += userRow;
+        });
+      }
+
+      async function updateUser(userId, action) {
+        const userRef = doc(db, "users", userId);
+        let updateData = {};
+
+        switch (action) {
+          case "suspend":
+            updateData = { status: "suspended" };
+            break;
+          case "block":
+            updateData = { status: "blocked" };
+            break;
+          case "active":
+            updateData = { status: "active" };
+            break;
+          case "promoteAdmin":
+            updateData = { role: "admin" };
+            break;
+          case "promoteMember":
+            updateData = { role: "member" };
+            break;
+          case "depromoteUser":
+            updateData = { role: "user" };
+            break;
+          default:
+            break;
+        }
+
+        try {
+          await updateDoc(userRef, updateData);
+          alert("User updated successfully!");
+          fetchUsers(); // Refresh the table after update
+        } catch (error) {
+          console.error("Error updating user:", error.message);
+          alert("Failed to update user.");
+        }
+      }
+
+      // Attach updateUser function to window
+      window.updateUser = updateUser;
+
+      // Fetch users on page load
+      window.onload = fetchUsers;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post Submission</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+</head>
+<body>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <form id="blogForm" method="POST">
+                        <div class="mb-4">
+                            <label class="text-xl text-gray-600">Title <span class="text-red-500">*</span></label></br>
+                            <input type="text" class="border-2 border-gray-300 p-2 w-full" name="title" id="title" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="text-xl text-gray-600">Description</label></br>
+                            <input type="text" class="border-2 border-gray-300 p-2 w-full" name="description" id="description" placeholder="(Optional)">
+                        </div>
+
+                        <div class="mb-8">
+                            <label class="text-xl text-gray-600">Content <span class="text-red-500">*</span></label></br>
+                            <textarea name="content" id="content"></textarea>
+                        </div>
+
+                        <div class="mb-4 featureBtn">
+                            <label class="text-xl text-gray-600">Featured Image</label></br>
+                            <input type="file" id="featuredImage" accept="image/*">
+                            <img id="featuredImagePreview" class="mt-4 hidden w-32 h-32 object-cover" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="text-xl text-gray-600">Status <span class="text-red-500">*</span></label></br>
+                            <select class="border-2 border-gray-300 p-2 w-full" name="status" id="status" required>
+                                <option value="pending">Pending</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="flex p-1">
+                            <select class="border-2 border-gray-300 border-r p-2" name="action" id="action">
+                                <option>Save and Publish</option>
+                                <option>Save Draft</option>
+                            </select>
+                            <button type="submit" class="ml-4 p-3 bg-blue-500 text-white hover:bg-blue-400">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth } from "../config/firebase-config.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+
+        // Initialize Firestore and Storage
+        const db = getFirestore();
+        const storage = getStorage();
+
+        let featuredImageUrl = '';
+
+        // Initialize CKEditor
+        ClassicEditor.create(document.querySelector('#content'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Image Upload
+        document.getElementById('featuredImage').addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            const storageRef = ref(storage, `featured-images/${file.name}`);
+            
+            try {
+                const snapshot = await uploadBytes(storageRef, file);
+                featuredImageUrl = await getDownloadURL(snapshot.ref);
+                const imgPreview = document.getElementById('featuredImagePreview');
+                imgPreview.src = featuredImageUrl;
+                imgPreview.classList.remove('hidden');
+            } catch (error) {
+                console.log(error);
+                
+                alert('Error uploading image:', error);
+            }
+        });
+
+        // Handle Form Submission
+        document.getElementById('blogForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const content = document.querySelector('#content').value;
+            const action = document.getElementById('action').value;
+            const status = document.getElementById('status').value; // Get the status value
+
+            
+            try {
+                await addDoc(collection(db, 'blogs'), {
+                    title,
+                    description,
+                    content,
+                    featuredImageUrl,
+                    action,
+                    createdAt: new Date(),
+                    status: status,
+                    author: auth.currentUser.uid, // Assuming user is authenticated
+
+                });
+                alert('Blog post submitted successfully!');
+                window.location.reload();
+            } catch (error) {
+                console.error('Error submitting blog post:', error);
+                alert('Failed to submit blog post.');
+            }
+        });
+
+        const featureBtn = document.querySelector('.featureBtn')
+
+        onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    alert("You are now signed in");
+    console.log("User is signed in:", user.email);
+    featureBtn.classList.remove('hidden');
+  } else {
+    alert("User is not signed in")
+    featureBtn.classList.add('hidden');
+  }
+});
+    </script>
+</body>
+</html>
