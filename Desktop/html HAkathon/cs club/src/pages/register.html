@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="../javascript/register.js"></script>
+    <link rel="stylesheet" href="../css/register.css">
+  </head>
+  <body>
+    <div
+      class="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8"
+    >
+      <div class="w-full max-w-md space-y-8">
+        <div class="w-full max-w-md space-y-8">
+        
+        <div>
+          <h2
+            class="mt-6 text-center text-4xl font-bold tracking-tight text-foreground"
+          >
+            Join Our Community
+          </h2>
+          <p class="mt-2 text-center text-sm text-muted-foreground">
+            Already have an account?
+            <a
+              class="font-medium text-primary hover:text-primary-foreground"
+              href="/src/pages/login.html"
+            >
+              Log in
+            </a>
+          </p>
+        </div>
+        <form class="space-y-6" action="#" method="POST">
+          <div>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 block text-sm font-medium text-foreground"
+              for="name"
+            >
+              Full Name
+            </label>
+            <div class="mt-1">
+              <input
+                class="h-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-foreground shadow-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                id="fullName"
+                autocomplete="name"
+                required
+                type="text"
+                name="name"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 block text-sm font-medium text-foreground"
+              for="email"
+            >
+              Email Address
+            </label>
+            <div class="mt-1">
+              <input
+                class="h-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-foreground shadow-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                id="email"
+                autocomplete="email"
+                required
+                type="email"
+                name="email"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 block text-sm font-medium text-foreground"
+              for="password"
+            >
+              Password
+            </label>
+            <div class="mt-1">
+              <input
+                class="h-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-foreground shadow-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                id="password"
+                autocomplete="current-password"
+                required
+                type="password"
+                name="password"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 block text-sm font-medium text-foreground"
+              for="grade"
+            >
+              Grade
+            </label>
+            <div class="relative mt-1">
+              <select
+                id="grade"
+                class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                aria-hidden="true"
+                tabindex="-1"
+                name="grade"
+              >
+                <option value="">Select a grade</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 block text-sm font-medium text-foreground"
+              for="section"
+            >
+              Section
+            </label>
+            <div class="mt-1">
+              <input
+                class="h-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-foreground shadow-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                id="section"
+                required
+                type="text"
+                name="section"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 block text-sm font-medium text-foreground"
+              for="roll-number"
+            >
+              Roll Number
+            </label>
+            <div class="mt-1">
+              <input
+                class="h-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-foreground shadow-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                id="rollNo"
+                required
+                name="roll-number"
+                type="text"
+              />
+            </div>
+          </div>
+          <div>
+            <button
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              type="submit"
+            >
+              Join Now
+            </button>
+              <!-- Alert Box -->
+          <div class="hidden alertDiv p-4 my-3 text-sm text-blue-800 rounded-lg  dark:bg-gray-800 dark:text-blue-400" role="alert">
+           
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
